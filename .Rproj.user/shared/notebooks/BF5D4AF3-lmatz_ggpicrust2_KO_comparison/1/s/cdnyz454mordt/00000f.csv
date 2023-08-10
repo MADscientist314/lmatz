@@ -1,0 +1,17 @@
+"0",""
+"0","# Generate pathway error bar plot"
+"0","# Please change Group to metadata$your_group_column if you are not using example dataset"
+"0","p <- pathway_errorbar(abundance = kegg_abundance, "
+"0","                     daa_results_df = deseq2_daa_annotated_sub_method_results_df, "
+"0","                     Group = metadata$Diabetes_Status, "
+"0","                     p_values_threshold = 0.25, "
+"0","                     order = ""pathway_class"", "
+"0","                     select = NULL, "
+"0","                     ko_to_kegg = T, "
+"0","                     p_value_bar = TRUE, "
+"0","                     colors = NULL, "
+"0","                     x_lab = ""pathway_name"")"
+"2","Registered S3 method overwritten by 'GGally':
+  method from   
+  +.gg   ggplot2
+"

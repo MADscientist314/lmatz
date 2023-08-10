@@ -1,0 +1,5 @@
+"0","#filtering pathways with less than 10"
+"0","keep <- rowSums(assay(dds)) >= 10"
+"0","dds <- dds[keep,]"
+"0","#ensureing that the comparison uses the control cohort as the reference"
+"0","dds$Diabetes_Status <- relevel(dds$Diabetes_Status, ref = ""HC"")"

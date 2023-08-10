@@ -1,0 +1,4 @@
+"0","metacyc_abundance<-metacyc_abundance%>%"
+"0","  mutate(keep=rowSums(metacyc_abundance)>10)%>%"
+"0","  filter(keep==TRUE)%>%"
+"0","  select(-keep)"

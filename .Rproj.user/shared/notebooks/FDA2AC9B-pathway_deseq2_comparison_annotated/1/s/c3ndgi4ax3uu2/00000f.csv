@@ -1,0 +1,4 @@
+"0","saveRDS(dds,""T2D_deseq2_dataset.RDS"")"
+"0","saveRDS(res,""T2D_deseq2_results.RDS"")"
+"0","write.table(data.frame(res),file = ""T2D_DESeq2_results_full.tsv"",sep = '\t',row.names = F)"
+"0",""

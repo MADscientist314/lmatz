@@ -1,0 +1,90 @@
+---
+title: "ggpicrust2"
+author: "Jochum, Michael D."
+format: 
+  html:
+    theme: sandstone
+editor: visual
+---
+
+## Objective
+
+The purpose of this script is to integrate the annotated KEGG pathways from the KO outputs from picrust2 and then compare differences observed between Type 2 diabetic and control cohorts using DESEQ2 wrapped inside ggpicrust2.
+
+## Analysis
+
+1.  Data Importation
+
+2.  Data Wrangling
+
+3.  Data Filtering
+
+    ##### 1. Data Import
+
+    Lets begin by loading our libraries and importing our metadata and KO predictions, then use ggpicrust2 to translate the KO to KEGG pathways
+
+```{r}
+library(readr)
+library(ggpicrust2)
+library(tibble)
+library(tidyverse)
+library(ggprism)
+library(patchwork)
+library(mosaic)
+library(ggh4x)
+getwd()
+
+metadata <- read_delim("IRB_Human_Metadata.txt", delim = "\t", escape_double = FALSE, trim_ws = TRUE) 
+metadata
+# Load KEGG pathway abundance
+kegg_abundance <- ko2kegg_abundance("picrust2/KO_metagenome_out/pred_metagenome_unstrat.tsv") 
+
+```
+
+##### differential pathway analysis
+
+Using the kegg_abundance and metadata, run DESeq2 to obtain the sig. KO assoc. with Type 2 diabetes
+
+```{r}
+deseq2_daa_results_df<- pathway_daa(abundance = kegg_abundance, 
+                                   metadata = metadata, 
+                                   group = "Diabetes_Status",
+                                   p.adjust ="BH",
+                                   daa_method = "DESeq2",
+                                   select = NULL,
+                                   reference = "HC") 
+deseq2_daa_results_df<-deseq2_daa_results_df%>%filter(!is.na(p_values)) #14
+
+deseq2_daa_results_df%>%filter(p_values<0.05) #14
+deseq2_daa_results_df%>%filter(p_adjust<0.05) #4
+```
+
+Annotate the significant KO that have annotations
+
+```{r}
+
+# Annotate pathway results using KO to KEGG conversion
+deseq2_daa_annotated_sub_method_results_df <- pathway_annotation(pathway = "KO", daa_results_df = deseq2_daa_results_df, ko_to_kegg = TRUE,)
+deseq2_daa_annotated_sub_method_results_df
+
+
+```
+
+Generate the pathway error plot
+
+```{r}
+
+# Generate pathway error bar plot
+# Please change Group to metadata$your_group_column if you are not using example dataset
+p <- pathway_errorbar(abundance = kegg_abundance, 
+                     daa_results_df = deseq2_daa_annotated_sub_method_results_df, 
+                     Group = metadata$Diabetes_Status, 
+                     p_values_threshold = 0.25, 
+                     order = "pathway_class", 
+                     select = NULL, 
+                     ko_to_kegg = T, 
+                     p_value_bar = TRUE, 
+                     colors = NULL, 
+                     x_lab = "pathway_name")
+p
+```

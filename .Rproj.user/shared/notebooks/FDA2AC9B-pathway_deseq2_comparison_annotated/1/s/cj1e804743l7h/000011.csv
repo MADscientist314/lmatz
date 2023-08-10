@@ -1,0 +1,7 @@
+"0","metacyc_abundance<-df %>%"
+"0","  select(-description) %>% "
+"0","  column_to_rownames(""pathway"")%>%"
+"0","  mutate(across(.cols=everything(),as.integer))"
+"0","key<-df %>%"
+"0","  select(pathway,description) %>%"
+"0","  distinct_all()"

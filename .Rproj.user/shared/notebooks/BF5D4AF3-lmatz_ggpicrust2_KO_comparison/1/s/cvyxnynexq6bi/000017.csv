@@ -1,0 +1,48 @@
+"0","deseq2_daa_results_df<- pathway_daa(abundance = kegg_abundance, "
+"0","                                   metadata = metadata, "
+"0","                                   group = ""Diabetes_Status"","
+"0","                                   p.adjust =""BH"","
+"0","                                   daa_method = ""DESeq2"","
+"0","                                   select = NULL,"
+"0","                                   reference = ""HC"") "
+"2","Sample names extracted.
+"
+"2","Identifying matching columns in metadata...
+"
+"2","Matching columns identified: SampleID . This is important for ensuring data consistency.
+"
+"2","Using all columns in abundance.
+"
+"2","Converting abundance to a matrix...
+"
+"2","Reordering metadata...
+"
+"2","Converting metadata to a matrix and data frame...
+"
+"2","Extracting group information...
+"
+"2","Running DESeq2. Note: DESeq2 is only suitable for comparison between two groups.
+"
+"2","Performing pairwise comparisons with DESeq2...
+"
+"2","converting counts to integer mode
+"
+"2","using pre-existing size factors
+"
+"2","estimating dispersions
+"
+"2","gene-wise dispersion estimates
+"
+"2","mean-dispersion relationship
+"
+"2","final dispersion estimates
+"
+"2","fitting model and testing
+"
+"2","Compiling DESeq2 results...
+"
+"2","DESeq2 analysis complete.
+"
+"0","deseq2_daa_results_df<-deseq2_daa_results_df%>%filter(!is.na(p_values)) #14"
+"0",""
+"0","deseq2_daa_results_df%>%filter(p_values<0.05) #14"

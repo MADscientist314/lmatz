@@ -1,0 +1,23 @@
+"0","library(readr)"
+"0","library(ggpicrust2)"
+"0","library(tibble)"
+"0","library(tidyverse)"
+"0","library(ggprism)"
+"0","library(patchwork)"
+"0","library(mosaic)"
+"0","library(ggh4x)"
+"0","getwd()"
+"1","[1]"
+"1"," ""K:/github/lmatz"""
+"1","
+"
+"0","metadata <- read_delim(""IRB_Human_Metadata.txt"", delim = ""\t"", escape_double = FALSE, trim_ws = TRUE) "
+"2","[1mRows: [22m[34m12[39m [1mColumns: [22m[34m5[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m ""\t""
+[31mchr[39m (3): SampleID, Diabetes_Status, Sex
+[32mdbl[39m (2): BMI, Age"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."
+"0","metadata"

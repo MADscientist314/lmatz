@@ -1,0 +1,162 @@
+---
+title: "Differential pathway abundance comparison"
+author: "Jochum,Michael D"
+format: html
+editor: visual
+---
+
+## **Objective**
+
+The purpose of this analysis is to compare the inferred pathway abundance file outputs from picrust2 and compare the Type 2 diabetes to the control cohorts.
+
+#### **Analysis Tasks**
+
+1.  Data Importation
+2.  Data Wrangling
+3.  Data Filtering
+4.  DESEQ2 assay - DESeq2 provides methods to test for differential expression by use of negative binomial generalized linear models; the estimates of dispersion and logarithmic fold changes incorporate data-driven prior distributions. 
+    1.  make associations amongst the diabetes status metadata with the differential abundant pathways.
+
+    2.  output statistical test tables
+5.  Data Visualization
+    1.  MA plots
+
+    2.  Heatmaps of significant pathways
+
+##### 1. Data Import
+
+Lets begin by loading our libraries
+
+```{r}
+library(readr)
+library(tidyverse)
+library(DESeq2)
+library(ggpubr)
+library(ggsci)
+library(knitr)
+```
+
+Import the pathway abundance tables and metadata files
+
+```{r}
+df<-read.delim("picrust2/pathways_out/path_abun_unstrat_descrip.tsv",sep="\t",header=T)
+metadata <- read_delim("IRB_Human_Metadata.txt", delim = "\t", escape_double = FALSE, trim_ws = TRUE)
+```
+
+##### 2. Data Wrangling
+
+-   split the imported data into a df without the descriptions
+    -   transpose this data-frame so the pathway names are the row names
+    -   convert the counts into an integer form that DESeq2 can accept.
+-   make a key that maps the pathway name to the description
+
+```{r}
+metacyc_abundance<-df %>%
+  select(-description) %>% 
+  column_to_rownames("pathway")%>%
+  mutate(across(.cols=everything(),as.integer))
+key<-df %>%
+  select(pathway,description) %>%
+  distinct_all()
+```
+
+We also need to convert the metadata character class to factor class where the Type 2 diabetes class is the first level so DESeq2 will compare it to the control class instead of the other way around.
+
+```{r}
+metadata<-metadata%>%mutate(Diabetes_Status=factor(Diabetes_Status,levels=c("T2D","HC")))
+```
+
+##### 3. Data Filtering
+
+Lets conduct an independent filter that removes any pathways with a total of less than 10 counts from the analysis
+
+```{r}
+metacyc_abundance<-metacyc_abundance%>%
+  mutate(keep=rowSums(metacyc_abundance)>10)%>%
+  filter(keep==TRUE)%>%
+  select(-keep)
+```
+
+##### 4. DESeq2
+
+Let import the count matrix and metadata into DESeq2 with a study design being the comparison across diabetes status
+
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = metacyc_abundance, 
+                              colData = metadata, 
+                              design = ~Diabetes_Status) 
+```
+
+This is an optional alternative way to filter the count matrix with less than 10 reads after import into deseq2 and an alternative way to relevel the metatdata comparion class post DESEQ2 import
+
+```{r}
+#filtering pathways with less than 10
+keep <- rowSums(assay(dds)) >= 10
+dds <- dds[keep,]
+#ensureing that the comparison uses the control cohort as the reference
+dds$Diabetes_Status <- relevel(dds$Diabetes_Status, ref = "HC")
+```
+
+Ok lets run DESeq2 with the default parameters for now and see what happens and export the results.
+
+```{r}
+dds <- DESeq(dds,parallel = T)
+res <- results(dds,)
+```
+
+ok lets inspect the significant results by
+
+-   converting the deseq2 results object with the comparisons to a data frame
+-   filtering anything with an adjusted p value of \< 0.05
+-   importing the description of each pathway
+-   reporting the output as a table
+
+```{r}
+res2<-data.frame(res)%>%
+  filter(padj<0.05)%>%
+  filter(log2FoldChange>2.5)%>%
+  filter(!is.na(padj))
+dim(res2)#15 x6
+#lets 
+res2<-res2%>%mutate(pathway=rownames(res2))
+res2<-inner_join(key,res2)%>%
+  arrange(padj,desc(log2FoldChange))
+kable(res2,
+      row.names = T,
+      align = 'c',
+      caption = "Table X. Results of 21 significant differentially abundant microbial inferred pathways associated with Type 2 Diabetes cohort as compared to control cohort. Pathway abundances were inferred from DADA2 derived ASV count matrices and taxonoimcally classified using DECIPHER against the Silva138 database. A comparison across diabetes status was conducted using DESeq2 with an upstream independent filtering of pathways containing less than 10 detected counts. Reported results have a log2 fold change >2.5 and an adjusted pvalue of <0.05. Significance was corrected for multiple comparisons using Benjamini-Hochberg multiple test correction.",
+      digits = 3)
+
+```
+
+Lets additionally save the analysis as an rds object and write an output of all the pathway comparisons to file for reference
+
+```{r}
+saveRDS(dds,"T2D_deseq2_dataset.RDS")
+saveRDS(res,"T2D_deseq2_results.RDS")
+write.table(data.frame(res),file = "T2D_DESeq2_results_full.tsv",sep = '\t',row.names = F)
+```
+
+5\. Data Visualization
+
+Lets visualize the MA plot
+
+```{r}
+MA_plot<-plotMA(res,
+  alpha = 0.1,
+  main = "Fig S1. MA plot of Diff. abundant pathways assoc. with Diabetes Status",
+  xlab = "Mean of Normalized Counts",ylab="Log2 Fold Change",
+  ylim=c(-7,7),
+  cex=0.75,
+  colNonSig = "gray10",
+  colSig = "firebrick",
+  colLine = "grey40",
+  returnData = FALSE,
+  MLE = FALSE)
+```
+
+Lets make a heatmap
+
+```{r}
+
+```
