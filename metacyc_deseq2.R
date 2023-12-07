@@ -47,8 +47,8 @@ res2<-data.frame(res)%>%
 dim(res2)
 
 MA_plot<-plotMA(res, ylim=c(-7,7))
-idx <- identify(res$baseMean, res$log2FoldChange)
-rownames(res)[idx]
+# idx <- identify(res$baseMean, res$log2FoldChange)
+# rownames(res)[idx]
 ##############################################################################
 res2
 

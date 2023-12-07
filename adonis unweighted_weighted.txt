@@ -1,0 +1,33 @@
+##### UNWEIGHTED #####
+
+> adonis2(uni~Diabetes_Status*BMI,data = sam,permutations = 9999) # 0.003
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 9999
+
+adonis2(formula = uni ~ Diabetes_Status * BMI, data = sam, permutations = 9999)
+                    Df SumOfSqs      R2      F Pr(>F)  
+Diabetes_Status      1   0.2996 0.07799 0.9064 0.6119  
+BMI                  1   0.5648 0.14704 1.7089 0.0121 *
+Diabetes_Status:BMI  1   0.3329 0.08665 1.0071 0.4058  
+Residual             8   2.6441 0.68833                
+Total               11   3.8413 1.00000                
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+##### WEIGHTED #####
+> adonis2(wuni~Diabetes_Status*BMI,data = sam,permutations = 9999) # 0.003
+Permutation test for adonis under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 9999
+
+adonis2(formula = wuni ~ Diabetes_Status * BMI, data = sam, permutations = 9999)
+                    Df SumOfSqs      R2      F Pr(>F)
+Diabetes_Status      1    9.326 0.09042 0.8418 0.5682
+BMI                  1    1.637 0.01587 0.1477 0.8771
+Diabetes_Status:BMI  1    3.546 0.03438 0.3200 0.7802
+Residual             8   88.631 0.85934              
+Total               11  103.139 1.00000 

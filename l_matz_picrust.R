@@ -17,7 +17,7 @@ metadata <- read_delim("IRB_Human_Metadata.txt", delim = "\t", escape_double = F
 metadata
 # Load KEGG pathway abundance
 kegg_abundance <- ko2kegg_abundance("picrust2/KO_metagenome_out/pred_metagenome_unstrat.tsv") 
-
+kegg_abundance
 # "ALDEx2": ANOVA-Like Differential Expression tool for high throughput sequencing data 
 # "DESeq2": Differential expression analysis based on the negative binomial distribution using DESeq2 
 # "edgeR": Exact test for differences between two groups of negative-binomially distributed counts using edgeR 
@@ -51,7 +51,7 @@ deseq2_daa_results_df<- pathway_daa(abundance = kegg_abundance,
 
 deseq2_daa_results_df<-deseq2_daa_results_df%>%filter(!is.na(p_values))) #14
 deseq2_daa_results_df%>%filter(p_adjust<0.05) #4
-
+deseq2_daa_results_df
 ################################################################################
 edger_daa_results_df<- pathway_daa(abundance = kegg_abundance, 
                                   metadata = metadata, 
@@ -118,12 +118,22 @@ deseq2_daa_results_df_slim<-deseq2_daa_results_df%>%filter(p_values<0.05)
 deseq2_daa_results_df%>%filter(p_adjust<0.25)
 # a2 <- pathway_annotation(pathway = "KO", daa_results_df = a, ko_to_kegg = TRUE)
 edger_daa_annotated_sub_method_results_df <- pathway_annotation(pathway = "KO", daa_results_df = edger_daa_results_df, ko_to_kegg = TRUE,)
-deseq2_daa_annotated_sub_method_results_df <- pathway_annotation(pathway = "KO", daa_results_df = deseq2_daa_results_df, ko_to_kegg = TRUE,)
+deseq2_daa_annotated_sub_method_results_df <- pathway_annotation(pathway = "KO", daa_results_df = deseq2_daa_results_df, ko_to_kegg = F,)
 deseq2_daa_annotated_sub_method_results_df
+
+kegg_abundance
+deseq2_daa_results_df
+
+
+
+
 edger_daa_annotated_sub_method_results_df
 
 deseq2_daa_annotated_sub_method_results_df$p_values
+deseq2_daa_annotated_sub_method_results_df
+metadata<-metadata%>%mutate(Diabetes_Status=factor(Diabetes_Status,levels=c("T2D","HC")))
 
+metadata$Diabetes_Status
 # Generate pathway error bar plot
 # Please change Group to metadata$your_group_column if you are not using example dataset
 p <- pathway_errorbar(abundance = kegg_abundance, 
@@ -136,7 +146,13 @@ p <- pathway_errorbar(abundance = kegg_abundance,
                      p_value_bar = TRUE, 
                      colors = NULL, 
                      x_lab = "pathway_name")
-p
+p$data
+
+
+glimpse(deseq2_daa_annotated_sub_method_results_df)
+
+
+write.table(p$data,"picrust")
 ################################################################################
 
 # Generate pathway error bar plot
