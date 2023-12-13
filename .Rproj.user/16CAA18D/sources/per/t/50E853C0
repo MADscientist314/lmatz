@@ -1,27 +1,27 @@
 {
-    "id": "277BB6FA",
-    "path": "K:/github/lmatz/metacyc_deseq2.R",
-    "project_path": "metacyc_deseq2.R",
+    "id": "50E853C0",
+    "path": "K:/github/lmatz/envfit.R",
+    "project_path": "envfit.R",
     "type": "r_source",
-    "hash": "0",
+    "hash": "257537264",
     "contents": "",
-    "dirty": true,
-    "created": 1689792604706.0,
+    "dirty": false,
+    "created": 1701980566483.0,
     "source_on_save": false,
-    "relative_order": 3,
+    "relative_order": 8,
     "properties": {
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "53,0",
-        "scrollLine": "28"
+        "cursorPosition": "19,0",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1689882822,
+    "lastKnownWriteTime": 1701981529,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1691698474113,
+    "last_content_update": 1701981529170,
     "read_only": false,
     "read_only_alternatives": []
 }

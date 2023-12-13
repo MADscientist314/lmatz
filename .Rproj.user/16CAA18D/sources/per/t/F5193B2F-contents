@@ -11,7 +11,8 @@ sam<-data.frame(metadata)
 rownames(sam)<-sam$SampleID
 colnames(counts)
 tax
-ps<-phyloseq(otu_table(counts,taxa_are_rows = T),tax_table(as.matrix(tax)),sample_data(sam))
+ps<-readRDS("ps.RDS")
+# ps<-phyloseq(otu_table(counts,taxa_are_rows = T),tax_table(as.matrix(tax)),sample_data(sam))
 ps
 
 #################################################################################
